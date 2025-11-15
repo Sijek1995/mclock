@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Premium Digital Clock dengan berbagai tema dan fitur">
+  <meta name="keywords" content="jam digital, clock, waktu, tanggal, premium">
+  <meta name="author" content="Your Name">
+  
+  <title>Ultimate Digital Clock - Multiple Styles</title>
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" as="style">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏰</text></svg>">
+  
+  <!-- CSS Variables untuk Theme Switching -->
+  <style>
+    :root {
+      --primary-color: #00b4db;
+      --secondary-color: #0083b0;
+      --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --text-color: #ffffff;
+      --container-bg: rgba(255, 255, 255, 0.1);
+      --font-main: 'Inter', sans-serif;
+      --font-clock: 'Orbitron', monospace;
+    }
+    
+    [data-theme="dark"] {
+      --primary-color: #ffd89b;
+      --secondary-color: #19547b;
+      --background-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      --text-color: #f0f0f0;
+      --container-bg: rgba(0, 0, 0, 0.2);
+    }
+    
+    [data-theme="retro"] {
+      --primary-color: #00ff00;
+      --secondary-color: #008800;
+      --background-gradient: linear-gradient(135deg, #000000 0%, #333333 100%);
+      --text-color: #00ff00;
+      --container-bg: rgba(0, 0, 0, 0.8);
+      --font-clock: 'Courier New', monospace;
+    }
+  </style>
+  
+  <!-- Base Styles & All Theme Styles -->
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/minimal.css">
+  <link rel="stylesheet" href="styles/premium.css">
+  <link rel="stylesheet" href="styles/retro.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body data-theme="light" data-style="minimal">
+  <!-- Navigation untuk Style Switching -->
+  <nav class="style-nav" aria-label="Style Selection">
+    <div class="nav-container">
+      <button class="nav-btn" data-style="minimal">Minimal</button>
+      <button class="nav-btn active" data-style="premium">Premium</button>
+      <button class="nav-btn" data-style="retro">Retro</button>
+      <!-- Sembunyikan yang belum ready -->
+      <!-- <button class="nav-btn" data-style="futuristic">Futuristic</button> -->
+      <!-- <button class="nav-btn" data-style="analog">Analog</button> -->
+    </div>
+  </nav>
+
+  <!-- Theme & Settings Panel -->
+  <div class="control-panel">
+    <button id="theme-btn" class="control-btn" aria-label="Toggle theme">
+      <span class="icon sun">☀️</span>
+      <span class="icon moon">🌙</span>
+    </button>
+    
+    <button id="settings-btn" class="control-btn" aria-label="Settings">
+      ⚙️
+    </button>
+    
+    <button id="fullscreen-btn" class="control-btn" aria-label="Fullscreen">
+      ⛶
+    </button>
+  </div>
+
+  <!-- Main Clock Container -->
+  <main class="main-content">
+    <div class="clock-container">
+      <!-- Digital Clock -->
+      <section class="clock-section digital-clock" aria-label="Digital Clock">
+        <div class="clock-frame">
+          <div class="clock-display">
+            <time id="digital-time" datetime="00:00:00">00:00:00</time>
+            <div class="clock-overlay"></div>
+          </div>
+        </div>
+        
+        <div class="clock-info">
+          <div id="date-display" aria-label="Current date">Jumat/01 Jan 2025</div>
+          <div id="greeting-display" aria-label="Greeting">Good Evening</div>
+        </div>
+      </section>
+
+      <!-- Analog Clock (Optional) - Sembunyikan dulu -->
+      <section class="clock-section analog-clock hidden" aria-label="Analog Clock">
+        <div class="analog-face">
+          <div class="hand hour-hand"></div>
+          <div class="hand minute-hand"></div>
+          <div class="hand second-hand"></div>
+          <div class="center-dot"></div>
+        </div>
+      </section>
+
+      <!-- Additional Info -->
+      <section class="additional-info">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Timezone</span>
+            <span id="timezone-display">WIB (UTC+7)</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Day of Year</span>
+            <span id="day-of-year">001/365</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Sunrise/Sunset</span>
+            <span id="sun-times">05:30/17:45</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Settings Modal -->
+  <dialog id="settings-modal">
+    <div class="modal-content">
+      <h2>Clock Settings</h2>
+      
+      <div class="setting-group">
+        <label for="time-format">Time Format:</label>
+        <select id="time-format">
+          <option value="24">24-hour</option>
+          <option value="12">12-hour</option>
+        </select>
+      </div>
+      
+      <div class="setting-group">
+        <label for="volume-control">Tick Sound Volume:</label>
+        <input type="range" id="volume-control" min="0" max="1" step="0.1" value="0.5">
+      </div>
+      
+      <div class="setting-group">
+        <label>
+          <input type="checkbox" id="show-seconds"> Show Seconds
+        </label>
+      </div>
+      
+<!-- Di settings modal - TAMBAHIN aja -->
+<div class="setting-group">
+  <label>
+    <input type="checkbox" id="sound-toggle"> Enable Sound Effects
+  </label>
+</div>
+      
+      <div class="modal-actions">
+        <button id="close-modal">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Audio Elements -->
+  <audio id="tick-sound" src="sounds/tick.mp3" preload="auto"></audio>
+  <audio id="click-sound" src="sounds/click.mp3" preload="auto"></audio>
+
+  <!-- JavaScript -->
+  <script src="js/config.js"></script>
+  <script src="js/clock.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
